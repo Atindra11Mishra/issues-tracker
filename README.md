@@ -1,78 +1,102 @@
-Issue Tracker – FastAPI + SvelteKit + PostgreSQL
-A full-stack bug tracking system with role-based authentication:
+# 🐛 Issue Tracker – FastAPI + SvelteKit + PostgreSQL
 
-Reporter: Can submit issues
+A full-stack bug tracking system with secure login, Google OAuth, JWT auth, and role-based permissions.
 
-Maintainer: Can triage issues
+### 🔐 Roles:
 
-Admin: Can triage + perform CRUD on users/issues
+* **Reporter**: Can report issues
+* **Maintainer**: Can triage issues
+* **Admin**: Can triage + perform CRUD on all users/issues
 
-Built with:
+---
 
-🚀 FastAPI (Python backend)
+## 📦 Tech Stack
 
-🎨 SvelteKit (JavaScript frontend)
+* ⚙️ **FastAPI** – Python backend
+* 🎨 **SvelteKit (JavaScript)** – frontend
+* 🐘 **PostgreSQL** – database
+* 🔐 **JWT + Google OAuth2** – authentication
+* 🐳 **Docker Compose** – container orchestration
 
-🐘 PostgreSQL (relational DB)
+---
 
-🐳 Docker Compose (containerized dev env)
+## 🚀 Getting Started
 
-⚙️ Getting Started
-✅ Prerequisites
-Docker & Docker Compose
+---
 
-Google OAuth credentials (client ID + secret)
+### 🔑 Environment Variables (`.env`)
 
-📦 Environment Variables
-Create a .env in root:
-
-env
-Copy
-Edit
-# Database
+```
+# Database Configuration
 POSTGRES_DB=auth_db
 POSTGRES_USER=auth_user
 POSTGRES_PASSWORD=securepassword
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+DATABASE_URL=postgresql+asyncpg://auth_user:securepassword@db:5432/auth_db
 
 # Google OAuth
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_CLIENT_ID=xxxxxxxxx
+GOOGLE_CLIENT_SECRET=xxxxxxxxx
+GOOGLE_REDIRECT_URI=http://localhost:8000/oauth/google/callback
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production-make-it-very-long
+
+# Frontend URL
 FRONTEND_URL=http://localhost:5173
-🚀 Run the App
-bash
-Copy
-Edit
+```
+
+---
+
+### 🐳 Start Development
+
+```bash
 docker-compose up --build
-Wait for:
+```
 
-nginx
-Copy
-Edit
-Uvicorn running on http://0.0.0.0:8000
-VITE dev server running on http://localhost:5173
+> Backend: [http://localhost:8000](http://localhost:8000)
+> Frontend: [http://localhost:5173](http://localhost:5173)
 
-🧪 Testing Flow
-Visit http://localhost:5173/signup or /login
+---
 
-Create or login to a user
+## 🔐 Auth Flow
 
-Google OAuth: click "Login with Google"
+* `POST /auth/signup` → email/password signup
+* `POST /auth/login` → JWT login
+* `GET /auth/me` → user info
+* `GET /oauth/google` → login with Google
 
-View authenticated user at /profile
+Google login will redirect with token to `FRONTEND_URL?token=...`
 
-🔐 Role Access
-Role	Report Bug	Triage Bug	CRUD Users
-Reporter	✅	❌	❌
-Maintainer	✅	✅	❌
-Admin	✅	✅	✅
+---
 
-🛠️ Backend Dependencies (requirements.txt)
-css
-Copy
-Edit
+## 🧪 Testing Roles
+
+| Role       | Report Bug | Triage | CRUD |
+| ---------- | ---------- | ------ | ---- |
+| Reporter   | ✅          | ❌      | ❌    |
+| Maintainer | ✅          | ✅      | ❌    |
+| Admin      | ✅          | ✅      | ✅    |
+
+---
+
+## 🧱 API Overview
+
+| Method | Endpoint               | Description             |
+| ------ | ---------------------- | ----------------------- |
+| POST   | `/auth/signup`         | Register new user       |
+| POST   | `/auth/login`          | Get JWT token           |
+| GET    | `/auth/me`             | Fetch current user info |
+| GET    | `/oauth/google`        | Login with Google       |
+| POST   | `/issues/`             | Create issue            |
+| GET    | `/issues/`             | List issues             |
+| POST   | `/issues/{id}/advance` | Advance status          |
+| DELETE | `/issues/{id}`         | Delete issue            |
+
+---
+
+## 📦 Backend Dependencies
+
+```txt
 fastapi
 uvicorn[standard]
 sqlalchemy
@@ -89,22 +113,28 @@ psycopg2-binary
 python-multipart
 starlette
 aiofiles
-📦 Docker Compose Overview
-yaml
-Copy
-Edit
+```
+
+---
+
+## 🗂️ Docker Compose Summary
+
+```yaml
 services:
   db:
     image: postgres:15
-    ...
   backend:
     build: .
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=...
-      - FRONTEND_URL=http://localhost:5173
   frontend:
     build: ./frontend
     ports:
       - "5173:5173"
+```
+
+---
+
+## ✅ License
+
+MIT — free to use, adapt, and deploy.
