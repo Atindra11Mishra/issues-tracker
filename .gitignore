@@ -1,0 +1,48 @@
+# === Python / FastAPI ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# IDEs & editors
+.vscode/
+.idea/
+*.swp
+
+# Migrations
+alembic/versions/
+
+# === Node / SvelteKit ===
+node_modules/
+.svelte-kit/
+build/
+*.log
+package-lock.json # optional — remove if you want to lock builds
+
+# === Docker ===
+*.pid
+*.sock
+*.db
+*.tar
+*.bak
+
+# Volume mounts
+postgres_data/
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+# === Testing ===
+coverage/
+htmlcov/
+pytest_cache/
